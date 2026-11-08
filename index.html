@@ -856,8 +856,13 @@
   function returnToGate() {
     saveProgress(0);
 
-    // Reset the final riddle whenever the visitor returns to the gate.
+    // Reset the PIN gate and final riddle whenever the visitor returns to the gate.
+    lsSet(PIN_KEY, "0");
     lsSet(RIDDLE_KEY, "0");
+    document.getElementById("pinAnswer").value = "";
+    document.getElementById("pinFeedback").textContent = "";
+    document.getElementById("pinFeedback").className = "feedback";
+    applyPinState();
     document.getElementById("riddleAnswer").value = "";
     document.getElementById("riddleFeedback").textContent = "";
     document.getElementById("riddleFeedback").className = "feedback";
@@ -949,10 +954,13 @@
   });
 
   renderCounter();
-  applyPinState();
 
-  // The final riddle is intentionally session-like: refresh starts it over.
+  // Refresh starts the locked thread over: PIN first, then the riddle.
+  lsSet(PIN_KEY, "0");
   lsSet(RIDDLE_KEY, "0");
+  document.getElementById("pinAnswer").value = "";
+  document.getElementById("pinFeedback").textContent = "";
+  applyPinState();
   applyRiddleState();
 
   applySecretState();
