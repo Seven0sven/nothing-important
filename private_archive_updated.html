@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>private archive</title>
+<style>
+  body { margin: 0; padding: 8px 12px 20px 12px; }
+  .hidden { display: none !important; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* =====================================================
+     GATE  (early-web personal page)
+     ===================================================== */
+  body.gate {
+    background: #000;
+    background-image:
+      radial-gradient(#ffffff 1px, transparent 1.5px),
+      radial-gradient(#88ccff 1px, transparent 1.5px);
+    background-size: 113px 97px, 67px 53px;
+    background-position: 0 0, 31px 40px;
+    color: #ffffff;
+    font: 14px "times new roman", times, serif;
+  }
+  #gate { text-align: center; }
+  #gate a { color: #00ffff; text-decoration: underline; cursor: pointer; }
+  #gate a:hover { color: #ffff00; }
+  #gate marquee { color: #ff99ff; font: bold 13px "courier new", courier, monospace; margin: 6px 0; }
+  .gtitle { font: bold italic 36px "times new roman", times, serif; color: #ffff00; margin: 14px 0 0 0; }
+  .gsub { color: #00ff00; font: 12px "courier new", courier, monospace; margin-bottom: 6px; }
+  #gate hr { border: 0; border-top: 3px ridge #8888ff; margin: 10px auto; width: 640px; max-width: 100%; }
+  .blink { animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { visibility: hidden; } }
+
+  .gbox {
+    width: 640px; max-width: 100%; box-sizing: border-box;
+    margin: 12px auto; background: #000066;
+    border: 4px ridge #8888ff; padding: 12px 18px; text-align: left;
+  }
+  .lvl { color: #ff3333; font-weight: bold; letter-spacing: 1px; }
+  .gh { font: bold 22px "times new roman", times, serif; color: #ffff00; margin: 4px 0 8px 0; }
+  .gbox p { margin: 8px 0; line-height: 1.4; }
+  .gsm { font-size: 12px; color: #aaaaff; }
+  .cipher {
+    font: bold 24px "courier new", courier, monospace; color: #00ff00;
+    background: #000; border: 2px inset #888; padding: 12px 8px;
+    text-align: center; letter-spacing: 3px; margin: 10px 0; overflow-wrap: anywhere;
+  }
+  #gate input[type=text] {
+    background: #fff; color: #000; border: 2px inset #888; padding: 3px;
+    font: 14px "courier new", courier, monospace; width: 300px; max-width: 62%;
+  }
+  #gate button {
+    background: #c0c0c0; color: #000; border: 2px outset #fff;
+    padding: 3px 14px; font: bold 13px arial, helvetica, sans-serif; cursor: pointer;
+  }
+  #gate button:active { border-style: inset; }
+  #gate .feedback { color: #ff6666; font-weight: bold; min-height: 18px; margin-top: 6px; }
+  #gate .feedback.success { color: #66ff66; }
+
+  .terminal {
+    height: 250px; overflow-y: auto; padding: 6px 8px; box-sizing: border-box;
+    background: #000; color: #c0c0c0; border: 2px inset #888;
+    font: 13px/1.45 "courier new", courier, monospace;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .terminal .sys { color: #00ff00; }
+  .terminal .bad { color: #ff5555; }
+  .cmdrow { margin-top: 8px; font: 13px "courier new", courier, monospace; }
+  .cmdrow .prompt { color: #c0c0c0; }
+
+  .win {
+    width: 360px; max-width: 100%; margin: 18px auto; background: #c0c0c0;
+    border: 2px outset #fff; color: #000; text-align: left;
+  }
+  .titlebar { background: #000080; color: #fff; font: bold 13px arial, helvetica, sans-serif; padding: 3px 6px; }
+  .winbody { padding: 18px; font: 13px arial, helvetica, sans-serif; line-height: 1.5; }
+  .winbody .btnrow { text-align: center; margin-top: 14px; }
+
+  .counter { margin: 10px 0 2px 0; font: 12px "courier new", courier, monospace; color: #aaaaff; }
+  .counter .digit {
+    display: inline-block; background: #000; color: #00ff00; border: 1px inset #888;
+    padding: 1px 4px; margin: 0 1px; font-weight: bold;
+  }
+  .gfoot { font: 11px "courier new", courier, monospace; color: #8888cc; margin-top: 6px; line-height: 1.6; }
+
+  /* =====================================================
+     FORUM  (imageboard)
+     ===================================================== */
+  body.forum {
+    background: #ffffee; color: #800000;
+    font: 13px arial, helvetica, sans-serif;
+  }
+  #forum a { color: #34345c; text-decoration: none; cursor: pointer; }
+  #forum a:hover { color: #dd0000; }
+  #forum hr { border: 0; border-top: 1px solid #d9bfb7; margin: 10px 0; clear: both; }
+  #forum input, #forum button { font: 13px arial, helvetica, sans-serif; }
+  #forum input[type=text] { width: 260px; max-width: 70%; }
+
+  .wrap { max-width: 860px; margin: 0 auto; }
+  .boardnav { font-size: 11px; color: #800000; margin-bottom: 4px; line-height: 1.8; }
+  .logo { text-align: center; margin: 14px 0 4px 0; }
+  .logo .title { font: bold 28px tahoma, arial, sans-serif; color: #af0a0f; letter-spacing: -2px; }
+  .logo .sub { font-size: 11px; color: #800000; }
+  .logo .sub2 { font-size: 10px; color: #800000; margin-top: 2px; }
+
+  .post { margin: 6px 0; }
+  .post.reply {
+    display: table; background: #f0e0d6;
+    border: 1px solid #d9bfb7; border-left: 0; border-top: 0;
+    padding: 2px 6px 4px 6px; margin: 4px 0 4px 18px;
+    max-width: calc(100% - 22px);
+  }
+  .postinfo { font-size: 13px; margin-bottom: 4px; }
+  .subject { color: #cc1105; font-weight: bold; }
+  .name { color: #117743; font-weight: bold; }
+  .mod { color: #ff0000; font-weight: bold; }
+  .uid { color: #fff; font-size: 10px; padding: 0 4px; }
+  .postno a { color: #800000 !important; }
+  .file { font-size: 12px; color: #800000; margin-bottom: 4px; }
+  .file a { text-decoration: underline !important; }
+  blockquote { margin: 8px 30px; line-height: 1.4; color: #800000; }
+  .reply blockquote { margin: 6px 14px; }
+  .greentext { color: #789922; }
+  .dim { color: #707070; }
+  .big { font-size: 15px; font-weight: bold; }
+  .small { font-size: 11px; }
+  .note { font-family: "courier new", courier, monospace; letter-spacing: 1px; }
+
+  .thread { margin: 0 0 8px 0; padding-bottom: 6px; border-bottom: 1px dotted #d9bfb7; }
+  .thread .tsub { font-weight: bold; font-size: 14px; }
+  .thread .tmeta { font-size: 11px; color: #707070; margin-top: 2px; }
+  .tag { color: #cc1105; font-weight: bold; font-size: 11px; }
+
+  table.postform { border-collapse: separate; border-spacing: 1px; margin: 6px 0; }
+  table.postform td.postblock {
+    background: #ea8; color: #800000; font-weight: bold;
+    padding: 2px 6px; border: 1px solid #800000; white-space: nowrap; font-size: 12px;
+  }
+  table.postform td { padding: 1px; vertical-align: middle; }
+
+  #forum .feedback { min-height: 16px; margin-top: 4px; color: #cc1105; font-weight: bold; }
+  #forum .feedback.success { color: #117743; }
+
+  .archive-content { margin: 8px 0; }
+  .footer { text-align: center; font-size: 10px; color: #800000; margin-top: 20px; }
+
+  @media (max-width: 600px) {
+    blockquote { margin: 8px 10px; }
+    .post.reply { margin-left: 6px; }
+    .gtitle { font-size: 28px; }
+  }
+</style>
+</head>
+<body class="gate">
+
+<!-- =====================================================
+     GATE
+     ===================================================== -->
+<div id="gate">
+  <marquee scrollamount="3">~*~ welcome to the private archive ~*~ please do not touch anything you cannot decode ~*~ best viewed in internet explorer 6 at 800x600 ~*~</marquee>
+  <div class="gtitle">~ the private archive ~</div>
+  <div class="gsub">[ personal storage index // build 00.07 ]</div>
+  <div class="blink" style="color:#ff3333;font:bold 12px 'courier new',monospace">!! UNDER CONSTRUCTION !!</div>
+  <hr>
+
+  <!-- LEVEL 1 -->
+  <div id="puzzle1" class="screen active">
+    <div class="gbox">
+      <div class="lvl">&gt;&gt; LEVEL 1 OF 3 &lt;&lt;</div>
+      <div class="gh">The Note on the Door</div>
+      <p>somebody taped a note to the door. it got scrambled on the way in.</p>
+      <div class="cipher">YMJ ITTW BFX SJAJW QTHPJI</div>
+      <p class="gsm">every letter was pushed forward by the same amount. push them back.
+        <a id="hintlink1" onclick="showHint1()">[need a hint?]</a></p>
+      <p id="hint1" class="gsm hidden">hint: the first word is a very common three-letter word. and the shift is smaller than ten.</p>
+      <div>
+        <input id="answer1" type="text" autocomplete="off" placeholder="what does the note say?">
+        <button onclick="checkPuzzle1()">ENTER</button>
+      </div>
+      <div id="feedback1" class="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- LEVEL 2 -->
+  <div id="puzzle2" class="screen">
+    <div class="gbox">
+      <div class="lvl">&gt;&gt; LEVEL 2 OF 3 &lt;&lt;</div>
+      <div class="gh">The Old Terminal</div>
+      <p>the door opens onto a dusty machine. something is still on it. type <b>help</b> and poke around.</p>
+      <div id="terminal" class="terminal" aria-live="polite"></div>
+      <div class="cmdrow">
+        <span class="prompt">C:\ARCHIVE&gt;</span>
+        <input id="command" type="text" autocomplete="off" spellcheck="false">
+        <button onclick="runCommand()">EXEC</button>
+      </div>
+      <p class="gsm">commands are not case-sensitive. nothing here needs the source code.</p>
+    </div>
+  </div>
+
+  <!-- LEVEL 3 -->
+  <div id="puzzle3" class="screen">
+    <div class="gbox">
+      <div class="lvl">&gt;&gt; LEVEL 3 OF 3 &lt;&lt;</div>
+      <div class="gh">The Vault</div>
+      <p>past the terminal there is a steel door with a keypad. the machine behind it never stored the password, only its <b>fingerprint</b> (a SHA-256 hash):</p>
+      <div class="cipher" style="font-size:13px;letter-spacing:1px">7cadc15d609c4ae9b4be6265b8e1cace16e6fa78a81ab0c7db82e687a7c867a5</div>
+      <p>a sticky note is stuck to the door. it lists twelve words. the password is one of them.</p>
+      <div class="cipher" style="font-size:16px;letter-spacing:2px">lighthouse &nbsp; harbor &nbsp; window &nbsp; orchard<br>compass &nbsp; meadow &nbsp; river &nbsp; blanket<br>garden &nbsp; paper &nbsp; quiet &nbsp; ember</div>
+      <p class="gsm">you can't read a password out of a hash. but you can hash every guess and see which one produces the same fingerprint. that's how real passwords get cracked.</p>
+      <div>
+        <span class="gsm">HASH TOOL:</span>
+        <input id="hashIn" type="text" autocomplete="off" spellcheck="false" placeholder="type a word to fingerprint">
+        <button onclick="hashTool()">HASH</button>
+      </div>
+      <div id="hashLog" class="terminal" style="height:110px;margin-top:8px;font-size:11px" aria-live="polite"></div>
+      <p class="gsm">(any online SHA-256 tool works too. all lowercase, no spaces.)</p>
+      <div style="margin-top:10px">
+        <input id="answer3" type="text" autocomplete="off" placeholder="the password">
+        <button onclick="checkPuzzle3()">OPEN</button>
+      </div>
+      <div id="feedback3" class="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <!-- ACCESS GRANTED -->
+  <div id="success" class="screen">
+    <div class="win">
+      <div class="titlebar">Access Granted</div>
+      <div class="winbody">
+        all levels cleared.<br>
+        the archive is open.
+        <div class="btnrow"><button onclick="openArchive()">&nbsp;&nbsp;OK&nbsp;&nbsp;</button></div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+  <div class="counter">you are visitor number <span id="counter"></span></div>
+  <div class="gfoot">no account required :: contents stored locally in this browser<br>(c) nobody. all rights reserved by nobody.</div>
+</div>
+
+<!-- =====================================================
+     FORUM
+     ===================================================== -->
+<div id="forum" class="hidden">
+<div class="wrap">
+
+  <div class="boardnav">[<a>untitled</a> / <a>archive</a> / <a>private</a>] <span style="float:right">CONNECTION: LOCAL</span></div>
+
+  <div class="logo">
+    <div class="title">/untitled/ - private archive</div>
+    <div class="sub">personal storage index // build 00.07</div>
+    <div class="sub2">no account required</div>
+  </div>
+  <hr>
+
+  <div class="boardnav">
+    [<a href="#" onclick="showArchivePage('home');return false;">Index</a>]
+    [<a href="#" onclick="showArchivePage('readme');return false;">Read Me</a>]
+    [<a href="#" onclick="showArchivePage('images');return false;">Images</a>]
+    [<a href="#" onclick="showArchivePage('videos');return false;">Videos</a>]
+    [<a href="#" onclick="showArchivePage('places');return false;">Places</a>]
+    [<a href="#" onclick="showArchivePage('misc');return false;">Music</a>]
+    [<a href="#" onclick="showArchivePage('random');return false;">Random</a>]
+    [<a href="#" onclick="showArchivePage('last');return false;">Locked</a>]
+    <span id="secretNav" class="hidden">[<a href="#" onclick="showArchivePage('secret');return false;">???</a>]</span>
+  </div>
+  <hr>
+
+  <!-- ================= INDEX / CATALOG ================= -->
+  <div id="archive-home" class="archive-content">
+    <div class="post">
+      <div class="postinfo"><span class="subject">THREAD LIST</span></div>
+      <blockquote>
+        <span class="dim">this board has been quiet for a long time. most of it got pruned. here's what's left.</span>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <blockquote>
+        <div class="thread">
+          <span class="tag">[STICKY]</span> <a class="tsub" href="#" onclick="showArchivePage('readme');return false;">READ ME FIRST</a>
+          <div class="tmeta">Admin ## Mod &mdash; 0 replies &mdash; last post 12/24/04(Fri)</div>
+        </div>
+        <div class="thread">
+          <a class="tsub" href="#" onclick="showArchivePage('images');return false;">/images/ pictures and things</a>
+          <div class="tmeta">3 replies &mdash; last post 03/02/05(Wed)</div>
+        </div>
+        <div class="thread">
+          <a class="tsub" href="#" onclick="showArchivePage('videos');return false;">/videos/ moving images</a>
+          <div class="tmeta">2 replies &mdash; last post 05/14/05(Sat)</div>
+        </div>
+        <div class="thread">
+          <a class="tsub" href="#" onclick="showArchivePage('places');return false;">/places/ somewhere to go</a>
+          <div class="tmeta">2 replies &mdash; last post 05/21/05(Sat)</div>
+        </div>
+        <div class="thread">
+          <a class="tsub" href="#" onclick="showArchivePage('misc');return false;">/music/ songs to listen to</a>
+          <div class="tmeta">3 replies &mdash; last post 09/09/05(Fri)</div>
+        </div>
+        <div class="thread">
+          <a class="tsub" href="#" onclick="showArchivePage('random');return false;">/random/ is anyone still here?</a>
+          <div class="tmeta">3 replies &mdash; last post 11/02/05(Wed)</div>
+        </div>
+        <div class="thread">
+          <span class="tag">[LOCKED]</span> <a class="tsub" href="#" onclick="showArchivePage('last');return false;">ONE MORE THING</a>
+          <div class="tmeta">Admin ## Mod &mdash; last post 12/24/04(Fri)</div>
+        </div>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= READ ME ================= -->
+  <div id="archive-readme" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">READ ME FIRST</span>
+        <span class="mod">Admin ## Mod</span>
+        12/24/04(Fri)23:41
+        <span class="postno">No.<a>1000001</a></span>
+      </div>
+      <blockquote>
+        this board has been dead for a while. most of the threads got pruned. what's left is what's left.<br><br>
+        if you're reading this you came in through the terminal. fine. stay a while.<br><br>
+        the last thread is locked behind a 4-digit PIN. i split the PIN into four notes and left one in each of the main threads: <b>images</b>, <b>videos</b>, <b>places</b> and <b>music</b>.<br><br>
+        every note is signed with my ID: <span class="uid" style="background:#7a3e9d">k3Lw9aT</span><br>
+        ignore everyone else. they are just noise.<br><br>
+        p.s. i don't keep passwords in plain text anymore, only their hashes. old habit. the terminal can hash things for you if you ever need to check something.<br><br>
+        <span class="greentext">&gt;the PIN goes in the locked thread</span><br>
+        <span class="greentext">&gt;good luck</span>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= IMAGES ================= -->
+  <div id="archive-images" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">/images/ pictures and things</span>
+        <span class="name">Anonymous</span> <span class="uid" style="background:#a0522d">Hq2bN8c</span>
+        01/09/05(Sun)14:02
+        <span class="postno">No.<a>1000114</a></span>
+      </div>
+      <div class="file">File: <a href="https://www.wikiart.org/en/arthur-dove/the-intellectual-1925" target="_blank" rel="noopener">image_001</a> — The Intellectual (1925)</div>
+      <div class="file">File: <a href="https://archive.org/details/HieronymusBoschTheSevenDeadlySinsAndTheFourLastThings" target="_blank" rel="noopener">image_002</a> — The Seven Deadly Sins and the Four Last Things</div>
+      <blockquote>
+        Arthur Dove, and Hieronymus Bosch. a couple of things i keep going back to.<br>
+        <a href="https://www.wikiart.org/en/arthur-dove/the-intellectual-1925" target="_blank" rel="noopener">wikiart.org/en/arthur-dove/the-intellectual-1925</a><br>
+        <a href="https://archive.org/details/HieronymusBoschTheSevenDeadlySinsAndTheFourLastThings" target="_blank" rel="noopener">archive.org/details/HieronymusBosch...FourLastThings</a>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#2f6f8f">p0rt4l9</span> 01/09/05(Sun)15:48 <span class="postno">No.<a>1000121</a></span></div>
+      <blockquote><span class="greentext">&gt;bosch</span><br>this is the one that scared me as a kid</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#5c7a29">x7Qm2Lp</span> 02/11/05(Fri)02:17 <span class="postno">No.<a>1000160</a></span></div>
+      <blockquote>the dove one is weirdly calm. i don't know why</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#7a3e9d">k3Lw9aT</span> 03/02/05(Wed)03:09 <span class="postno">No.<a>1000203</a></span></div>
+      <blockquote class="note">
+        NOTE 1/4<br>
+        the FIRST number in the title of image_002.<br>
+        write it as a digit.
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= VIDEOS ================= -->
+  <div id="archive-videos" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">/videos/ moving images</span>
+        <span class="name">Anonymous</span> <span class="uid" style="background:#a0522d">Hq2bN8c</span>
+        03/20/05(Sun)22:30
+        <span class="postno">No.<a>1000244</a></span>
+      </div>
+      <div class="file">File: <a href="https://archive.org/details/the-bad-sleep-well" target="_blank" rel="noopener">video_001</a> — The Bad Sleep Well</div>
+      <blockquote>
+        <span class="greentext">&gt;have not watched it yet</span><br>
+        <a href="https://archive.org/details/the-bad-sleep-well" target="_blank" rel="noopener">archive.org/details/the-bad-sleep-well</a>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#2f6f8f">p0rt4l9</span> 03/21/05(Mon)01:12 <span class="postno">No.<a>1000251</a></span></div>
+      <blockquote>kurosawa. don't read anything about it first</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#7a3e9d">k3Lw9aT</span> 05/14/05(Sat)03:21 <span class="postno">No.<a>1000302</a></span></div>
+      <blockquote class="note">
+        NOTE 2/4<br>
+        HTZSY YMJ BTWIX NS NYX YNYQJ<br><br>
+        <span class="dim">(same trick as the door. you know the shift. the film is the one in this thread.)</span>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= PLACES ================= -->
+  <div id="archive-places" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">/places/ somewhere to go</span>
+        <span class="name">Anonymous</span> <span class="uid" style="background:#a0522d">Hq2bN8c</span>
+        04/30/05(Sat)19:05
+        <span class="postno">No.<a>1000275</a></span>
+      </div>
+      <div class="file">File: <a href="https://www.google.com/maps/place/27°22'50.2%22N+33°37'56.3%22E/@27.380573,33.6312837,399m/data=!3m1!1e3!4m4!3m3!8m2!3d27.3806111!4d33.6323056?entry=ttu&amp;g_ep=EgoyMDI2MTEwMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">location_001</a> — 27°22'50.2"N 33°37'56.3"E</div>
+      <blockquote>
+        <span class="greentext">&gt;somewhere to go</span><br>
+        <a href="https://www.google.com/maps/place/27°22'50.2%22N+33°37'56.3%22E/@27.380573,33.6312837,399m/data=!3m1!1e3!4m4!3m3!8m2!3d27.3806111!4d33.6323056?entry=ttu&amp;g_ep=EgoyMDI2MTEwMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener">open in google maps</a>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#5c7a29">x7Qm2Lp</span> 05/02/05(Mon)00:44 <span class="postno">No.<a>1000281</a></span></div>
+      <blockquote>what's even there? it's just a dot</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#7a3e9d">k3Lw9aT</span> 05/21/05(Sat)03:33 <span class="postno">No.<a>1000318</a></span></div>
+      <blockquote class="note">
+        NOTE 3/4<br>
+        take the degrees of the latitude. add up its digits.<br>
+        if it is still two digits, add again.
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= MUSIC ================= -->
+  <div id="archive-misc" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">/music/ songs to listen to</span>
+        <span class="name">Anonymous</span> <span class="uid" style="background:#a0522d">Hq2bN8c</span>
+        06/10/05(Fri)21:15
+        <span class="postno">No.<a>1000340</a></span>
+      </div>
+      <div class="file">File: <a href="https://open.spotify.com/track/4kefRfMSBS9saHTiLCOwNr?si=bae3e21be2ab41d2" target="_blank" rel="noopener">song_001</a> — There's Plenty of Fish in the Sea (Too Bad You're Not a Fish)</div>
+      <div class="file">File: <a href="https://open.spotify.com/track/6suZEL8JYtHSST1do3uNNl?autoplay_ok=1" target="_blank" rel="noopener">song_002</a> — Prism on a Window</div>
+      <blockquote>
+        Hail The Sun, and Worst Party Ever.<br>
+        <a href="https://open.spotify.com/track/4kefRfMSBS9saHTiLCOwNr?si=bae3e21be2ab41d2" target="_blank" rel="noopener">play song_001 on spotify</a><br>
+        <a href="https://open.spotify.com/track/6suZEL8JYtHSST1do3uNNl?autoplay_ok=1" target="_blank" rel="noopener">play song_002 on spotify</a>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#2f6f8f">p0rt4l9</span> 06/10/05(Fri)23:58 <span class="postno">No.<a>1000347</a></span></div>
+      <blockquote>only two songs? this is the whole playlist?</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#a0522d">Hq2bN8c</span> 06/11/05(Sat)00:20 <span class="postno">No.<a>1000349</a></span></div>
+      <blockquote><span class="greentext">&gt;for now</span></blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#7a3e9d">k3Lw9aT</span> 09/09/05(Fri)03:47 <span class="postno">No.<a>1000388</a></span></div>
+      <blockquote class="note">
+        NOTE 4/4<br>
+        the only even prime.
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- ================= RANDOM ================= -->
+  <div id="archive-random" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">/random/ is anyone still here?</span>
+        <span class="name">Anonymous</span> <span class="uid" style="background:#b8860b">m00nl1t</span>
+        10/30/05(Sun)03:17
+        <span class="postno">No.<a>1000401</a></span>
+      </div>
+      <blockquote>
+        anyone still here?<br>
+        i keep checking this place even though nobody posts.
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#2f6f8f">p0rt4l9</span> 10/30/05(Sun)05:30 <span class="postno">No.<a>1000403</a></span></div>
+      <blockquote>bump</blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#b8860b">m00nl1t</span> 10/31/05(Mon)03:17 <span class="postno">No.<a>1000409</a></span></div>
+      <blockquote>
+        <span class="dim">found taped to the monitor:</span><br><br>
+        Late at night the house is quiet.<br>
+        All the lights are off but one.<br>
+        Nobody is awake to see it.<br>
+        Tiny things keep humming.<br>
+        Every door was left unlocked.<br>
+        Rooms remember who was there.<br>
+        Nothing here is a mistake.<br><br>
+        <span class="greentext">&gt;the first of everything is the key</span>
+      </blockquote>
+    </div>
+    <div class="post reply">
+      <div class="postinfo"><span class="name">Anonymous</span> <span class="uid" style="background:#5c7a29">x7Qm2Lp</span> 11/02/05(Wed)22:08 <span class="postno">No.<a>1000415</a></span></div>
+      <blockquote>weird. i like it though</blockquote>
+    </div>
+  </div>
+
+  <!-- ================= LOCKED THREAD ================= -->
+  <div id="archive-last" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">ONE MORE THING</span>
+        <span class="mod">Admin ## Mod</span>
+        12/24/04(Fri)23:58
+        <span class="postno">No.<a>1000002</a></span>
+        <span class="tag">[LOCKED]</span>
+      </div>
+
+      <!-- locked state -->
+      <div id="pin-locked">
+        <blockquote>
+          <span class="greentext">&gt;this thread is locked</span><br>
+          enter the 4-digit PIN.
+        </blockquote>
+        <table class="postform">
+          <tr>
+            <td class="postblock">PIN</td>
+            <td>
+              <input id="pinAnswer" type="text" maxlength="8" autocomplete="off" style="width:100px">
+              <button onclick="checkPin()">Unlock</button>
+            </td>
+          </tr>
+        </table>
+        <div id="pinFeedback" class="feedback" aria-live="polite"></div>
+      </div>
+
+      <!-- unlocked state -->
+      <div id="pin-open" class="hidden">
+        <div id="riddle-open">
+          <blockquote>
+            <span class="greentext">&gt;you actually found all four</span><br><br>
+            before you go, one last question.<br><br>
+            <span class="big">Trends fade and fashions change, but what can you wear that never goes out of style?</span>
+          </blockquote>
+          <table class="postform">
+            <tr>
+              <td class="postblock">Your Answer</td>
+              <td>
+                <input id="riddleAnswer" type="text" autocomplete="off">
+                <button onclick="checkRiddle()">Submit</button>
+              </td>
+            </tr>
+          </table>
+          <div id="riddleFeedback" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div id="riddle-done" class="hidden">
+          <blockquote>
+            <span class="greentext">&gt;it was a smile</span><br><br>
+            <span class="big">ur doing well :)</span><br><br>
+            i don't know what today was like for you, but i hope the rest of it gets a little softer.<br>
+            keep going. no rush.
+          </blockquote>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SECRET ROOM ================= -->
+  <div id="archive-secret" class="archive-content hidden">
+    <div class="post">
+      <div class="postinfo">
+        <span class="subject">THE ROOM BEHIND THE ROOM</span>
+        <span class="name">Anonymous</span>
+        11/08/26(Sun)03:33
+        <span class="postno">No.<a>1000999</a></span>
+      </div>
+      <blockquote>
+        <span class="greentext">&gt;you weren't supposed to find this</span><br>
+        <span class="greentext">&gt;most people stop at the door</span><br>
+        <span class="greentext">&gt;you didn't</span><br><br>
+        nothing else is in here yet. but now you know the house has more rooms than it says.
+      </blockquote>
+    </div>
+  </div>
+
+  <hr>
+  <div class="boardnav">
+    [<a href="#" onclick="showArchivePage('home');return false;">Return</a>]
+    [<a href="#" onclick="window.scrollTo(0,0);return false;">Top</a>]
+    [<a href="#" onclick="returnToGate();return false;">Back to the Gate</a>]
+  </div>
+  <hr>
+  <div class="footer">- contents stored locally in this browser -</div>
+</div>
+</div>
+
+<script>
+  const SAVE_KEY = "privateArchiveProgress_v3";
+  const RIDDLE_KEY = "privateArchiveRiddle_v3";
+  const VISIT_KEY = "privateArchiveVisits_v3";
+  const SECRET_KEY = "privateArchiveSecret_v3";
+  const PIN_KEY = "privateArchivePin_v3";
+
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, String(v)); } catch (e) {} }
+
+  function getProgress() { return Number(lsGet(SAVE_KEY) || "0"); }
+  function saveProgress(v) { lsSet(SAVE_KEY, v); }
+
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+  }
+  function normalize(value) { return value.toLowerCase().replace(/[^a-z]/g, ""); }
+
+  /* sha-256, so answers are stored as hashes and the terminal can hash things */
+  function sha256hex(str) {
+    const bytes = Array.from(new TextEncoder().encode(str));
+    const bitLen = bytes.length * 8;
+    bytes.push(0x80);
+    while (bytes.length % 64 !== 56) bytes.push(0);
+    const hi = Math.floor(bitLen / 4294967296), lo = bitLen >>> 0;
+    for (let s = 24; s >= 0; s -= 8) bytes.push((hi >>> s) & 255);
+    for (let s = 24; s >= 0; s -= 8) bytes.push((lo >>> s) & 255);
+    const primes = [];
+    for (let n = 2; primes.length < 64; n++) { if (primes.every(p => n % p)) primes.push(n); }
+    const frac = x => Math.floor((x - Math.floor(x)) * 4294967296);
+    const K = primes.map(p => frac(Math.cbrt(p)));
+    let H = primes.slice(0, 8).map(p => frac(Math.sqrt(p)));
+    const rotr = (x, n) => (x >>> n) | (x << (32 - n));
+    for (let off = 0; off < bytes.length; off += 64) {
+      const w = new Array(64);
+      for (let i = 0; i < 16; i++) {
+        w[i] = (bytes[off + 4 * i] << 24) | (bytes[off + 4 * i + 1] << 16) | (bytes[off + 4 * i + 2] << 8) | bytes[off + 4 * i + 3];
+      }
+      for (let i = 16; i < 64; i++) {
+        const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+        const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+        w[i] = (w[i - 16] + s0 + w[i - 7] + s1) | 0;
+      }
+      let [a, b, c, d, e, f, g, h] = H;
+      for (let i = 0; i < 64; i++) {
+        const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+        const ch = (e & f) ^ (~e & g);
+        const t1 = (h + S1 + ch + K[i] + w[i]) | 0;
+        const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+        const maj = (a & b) ^ (a & c) ^ (b & c);
+        const t2 = (S0 + maj) | 0;
+        h = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      H = [(H[0] + a) | 0, (H[1] + b) | 0, (H[2] + c) | 0, (H[3] + d) | 0,
+           (H[4] + e) | 0, (H[5] + f) | 0, (H[6] + g) | 0, (H[7] + h) | 0];
+    }
+    return H.map(x => (x >>> 0).toString(16).padStart(8, "0")).join("");
+  }
+
+  const H_DOOR = "5d5671d110879ce6b51361090e38cad0e8c892d0b2c8ba319bddc8ff6d779b51";
+  const H_MOON = "9e78b43ea00edcac8299e0cc8df7f6f913078171335f733a21d5d911b6999132";
+  const H_LANTERN = "c5220b3c4266890f047190c18dc4243e0dac079d43ca8065899c4f9f3cf124ef";
+  const H_SMILE = "fa1eadc4c6995667412681c69ce33adfc9302a2965f521c40908549e670e2e4e";
+  const H_ASMILE = "1746c1e4aa86660b1cf245d47ec1f3f1f05713e828ce9867ab514f241a6d9312";
+  const H_EMBER = "7cadc15d609c4ae9b4be6265b8e1cace16e6fa78a81ab0c7db82e687a7c867a5";
+  const H_PIN ="8d8538e7cbbfed3cfe278a16599ca4c6ad473415db9694bf136bb4ddf5704b2e";
+
+  /* visitor counter */
+  function renderCounter() {
+    let n = Number(lsGet(VISIT_KEY) || "416") + 1;
+    lsSet(VISIT_KEY, n);
+    const el = document.getElementById("counter");
+    el.innerHTML = "";
+    String(n).padStart(6, "0").split("").forEach(d => {
+      const s = document.createElement("span");
+      s.className = "digit";
+      s.textContent = d;
+      el.appendChild(s);
+    });
+  }
+
+  /* level 1: caesar */
+  function showHint1() {
+    document.getElementById("hint1").classList.remove("hidden");
+    document.getElementById("hintlink1").classList.add("hidden");
+  }
+  function checkPuzzle1() {
+    const answer = normalize(document.getElementById("answer1").value);
+    const feedback = document.getElementById("feedback1");
+    if (sha256hex(answer) === H_DOOR) {
+      saveProgress(1);
+      feedback.textContent = "accepted. the door swings open...";
+      feedback.className = "feedback success";
+      setTimeout(() => {
+        showScreen("puzzle2");
+        bootTerminal();
+      }, 600);
+    } else {
+      feedback.textContent = "no match. push every letter back by the same amount.";
+      feedback.className = "feedback";
+    }
+  }
+
+  /* level 2: terminal */
+  let terminalBooted = false;
+  function writeLine(message, type = "") {
+    const terminal = document.getElementById("terminal");
+    const line = document.createElement("div");
+    if (type) line.className = type;
+    line.textContent = message;
+    terminal.appendChild(line);
+    terminal.scrollTop = terminal.scrollHeight;
+  }
+  function bootTerminal() {
+    if (terminalBooted) return;
+    terminalBooted = true;
+    writeLine("ARCHIVE OS [Version 0.07]");
+    writeLine("(C) nobody. all rights reserved by nobody.");
+    writeLine("");
+    writeLine("1 user logged in: anonymous");
+    writeLine("type 'help' for a list of commands.", "sys");
+    writeLine("");
+  }
+  function runCommand() {
+    const input = document.getElementById("command");
+    const raw = input.value.trim();
+    if (!raw) return;
+    input.value = "";
+    writeLine("C:\\ARCHIVE> " + raw);
+    const parts = raw.toLowerCase().split(/\s+/);
+    const cmd = parts[0];
+    const arg = parts.slice(1).join(" ");
+
+    if (cmd === "help") {
+      writeLine("available commands:", "sys");
+      writeLine("  help         list commands");
+      writeLine("  ls           list files  (some files hide)");
+      writeLine("  cat FILE     read a file");
+      writeLine("  scan         try to read the signal");
+      writeLine("  hash TEXT    sha-256 fingerprint of any text");
+      writeLine("  whoami       who is this");
+      writeLine("  clear        clear the screen");
+      writeLine("  submit WORD  submit the answer");
+    } else if (cmd === "ls" || cmd === "dir") {
+      writeLine("readme.txt");
+      writeLine("signal.dat");
+      writeLine("morse.chart");
+      writeLine("node_02.locked");
+      if (arg.indexOf("-a") !== -1) {
+        writeLine(".note", "sys");
+      }
+    } else if (cmd === "cat" || cmd === "type") {
+      if (arg === "readme.txt") {
+        writeLine("someone left a signal on this machine.", "sys");
+        writeLine("it is dots and dashes. the chart is in morse.chart.", "sys");
+        writeLine("decode it by hand, then: submit [word]", "sys");
+        writeLine("tip: 'hash [text]' prints the sha-256 of anything. useful for checking passphrases.", "sys");
+      } else if (arg === "signal.dat") {
+        writeLine("RECEIVED 03:17 // 1 WORD");
+        writeLine("-- --- --- -.");
+      } else if (arg === "morse.chart") {
+        writeLine("A .-    B -...  C -.-.  D -..   E .     F ..-.");
+        writeLine("G --.   H ....  I ..    J .---  K -.-   L .-..");
+        writeLine("M --    N -.    O ---   P .--.  Q --.-  R .-.");
+        writeLine("S ...   T -     U ..-   V ...-  W .--   X -..-");
+        writeLine("Y -.--  Z --..");
+      } else if (arg === ".note") {
+        writeLine("it is up there, and it is not the sun.", "sys");
+        writeLine("it changes shape every night but never leaves.", "sys");
+      } else if (arg === "node_02.locked") {
+        writeLine("LOCKED. passphrase required.", "bad");
+        writeLine("i only kept the fingerprint, not the passphrase:");
+        writeLine("sha256: " + H_LANTERN, "sys");
+        writeLine("the passphrase itself, you left somewhere upstairs.");
+        writeLine("check a guess with: hash [guess]");
+        writeLine("then: unlock [passphrase]");
+      } else {
+        writeLine("file not found. try: ls", "bad");
+      }
+    } else if (cmd === "scan") {
+      writeLine("scanning...");
+      writeLine("signal too noisy to read automatically.", "bad");
+      writeLine("you will have to decode it yourself.");
+    } else if (cmd === "unlock") {
+      if (sha256hex(normalize(arg)) === H_LANTERN) {
+        writeLine("passphrase accepted.", "sys");
+        writeLine("node_02 unlocked.", "sys");
+        writeLine("a new room has opened upstairs.", "sys");
+        lsSet(SECRET_KEY, "1");
+        applySecretState();
+      } else if (!arg) {
+        writeLine("usage: unlock [passphrase]");
+      } else {
+        writeLine("wrong passphrase.", "bad");
+      }
+    } else if (cmd === "hash" || cmd === "sha256") {
+      if (!arg) {
+        writeLine("usage: hash [text]");
+      } else {
+        writeLine("sha256(\"" + arg + "\")");
+        writeLine("= " + sha256hex(arg), "sys");
+        if (sha256hex(arg) === H_LANTERN) {
+          writeLine("this matches the fingerprint on node_02.locked.", "sys");
+        }
+      }
+    } else if (cmd === "whoami") {
+      writeLine("anonymous");
+    } else if (cmd === "sudo") {
+      writeLine("anonymous is not in the sudoers file. this incident will not be reported.", "bad");
+    } else if (cmd === "submit") {
+      if (sha256hex(normalize(arg)) === H_MOON) {
+        writeLine("key accepted. node 02 cleared.", "sys");
+        saveProgress(2);
+        setTimeout(() => showScreen("puzzle3"), 700);
+      } else {
+        writeLine("access denied. signal does not match.", "bad");
+      }
+    } else if (cmd === "clear" || cmd === "cls") {
+      document.getElementById("terminal").textContent = "";
+    } else {
+      writeLine("'" + cmd + "' is not recognized. type 'help'.", "bad");
+    }
+  }
+
+  /* level 3: hash puzzle */
+  function hashTool() {
+    const input = document.getElementById("hashIn");
+    const text = input.value.trim().toLowerCase();
+    if (!text) return;
+    input.value = "";
+    const log = document.getElementById("hashLog");
+    const a = document.createElement("div");
+    a.textContent = "sha256(\"" + text + "\")";
+    const b = document.createElement("div");
+    b.className = "sys";
+    b.style.marginBottom = "4px";
+    b.textContent = sha256hex(text);
+    log.appendChild(a);
+    log.appendChild(b);
+    log.scrollTop = log.scrollHeight;
+  }
+  function checkPuzzle3() {
+    const answer = normalize(document.getElementById("answer3").value);
+    const feedback = document.getElementById("feedback3");
+    if (sha256hex(answer) === H_EMBER) {
+      saveProgress(3);
+      feedback.textContent = "fingerprint match. the vault door unlocks...";
+      feedback.className = "feedback success";
+      setTimeout(() => showScreen("success"), 700);
+    } else {
+      feedback.textContent = "no match. hash your guess and compare it to the fingerprint.";
+      feedback.className = "feedback";
+    }
+  }
+
+  /* gate <-> forum */
+  function openArchive() {
+    document.getElementById("gate").classList.add("hidden");
+    document.getElementById("forum").classList.remove("hidden");
+    document.body.className = "forum";
+    document.title = "/untitled/ - private archive";
+    window.scrollTo(0, 0);
+    showArchivePage("home");
+  }
+  function returnToGate() {
+    saveProgress(0);
+
+    // Reset the final riddle whenever the visitor returns to the gate.
+    lsSet(RIDDLE_KEY, "0");
+    document.getElementById("riddleAnswer").value = "";
+    document.getElementById("riddleFeedback").textContent = "";
+    document.getElementById("riddleFeedback").className = "feedback";
+    applyRiddleState();
+
+    terminalBooted = false;
+    document.getElementById("terminal").textContent = "";
+    ["answer1", "command", "hashIn", "answer3"].forEach(id => { document.getElementById(id).value = ""; });
+    document.getElementById("hashLog").textContent = "";
+    document.getElementById("feedback3").textContent = "";
+    document.getElementById("feedback1").textContent = "";
+    document.getElementById("hint1").classList.add("hidden");
+    document.getElementById("hintlink1").classList.remove("hidden");
+    document.getElementById("forum").classList.add("hidden");
+    document.getElementById("gate").classList.remove("hidden");
+    document.body.className = "gate";
+    document.title = "private archive";
+    showScreen("puzzle1");
+    window.scrollTo(0, 0);
+  }
+  function showArchivePage(name) {
+    ["home", "readme", "images", "videos", "places", "misc", "random", "last", "secret"].forEach(page => {
+      document.getElementById("archive-" + page).classList.toggle("hidden", page !== name);
+    });
+    window.scrollTo(0, 0);
+  }
+
+  function applySecretState() {
+    document.getElementById("secretNav").classList.toggle("hidden", lsGet(SECRET_KEY) !== "1");
+  }
+
+  /* locked thread: pin, then riddle */
+  function applyPinState() {
+    const open = lsGet(PIN_KEY) === "1";
+    document.getElementById("pin-locked").classList.toggle("hidden", open);
+    document.getElementById("pin-open").classList.toggle("hidden", !open);
+  }
+  function checkPin() {
+    const value = document.getElementById("pinAnswer").value.replace(/\D/g, "");
+    const feedback = document.getElementById("pinFeedback");
+    if (sha256hex(value) === H_PIN) {
+      lsSet(PIN_KEY, "1");
+      feedback.textContent = "unlocked.";
+      feedback.className = "feedback success";
+      setTimeout(applyPinState, 500);
+    } else {
+      feedback.textContent = "that's not it.";
+      feedback.className = "feedback";
+    }
+  }
+
+  function applyRiddleState() {
+    const done = lsGet(RIDDLE_KEY) === "1";
+    document.getElementById("riddle-open").classList.toggle("hidden", done);
+    document.getElementById("riddle-done").classList.toggle("hidden", !done);
+  }
+  function checkRiddle() {
+    const answer = normalize(document.getElementById("riddleAnswer").value);
+    const feedback = document.getElementById("riddleFeedback");
+    const h = sha256hex(answer);
+    if (h === H_SMILE || h === H_ASMILE) {
+      lsSet(RIDDLE_KEY, "1");
+      feedback.textContent = "accepted.";
+      feedback.className = "feedback success";
+      setTimeout(applyRiddleState, 450);
+    } else {
+      feedback.textContent = "not quite. think about something you can wear without buying it.";
+      feedback.className = "feedback";
+    }
+  }
+
+  document.getElementById("answer1").addEventListener("keydown", e => {
+    if (e.key === "Enter") checkPuzzle1();
+  });
+  document.getElementById("command").addEventListener("keydown", e => {
+    if (e.key === "Enter") runCommand();
+  });
+  document.getElementById("hashIn").addEventListener("keydown", e => {
+    if (e.key === "Enter") hashTool();
+  });
+  document.getElementById("answer3").addEventListener("keydown", e => {
+    if (e.key === "Enter") checkPuzzle3();
+  });
+  document.getElementById("pinAnswer").addEventListener("keydown", e => {
+    if (e.key === "Enter") checkPin();
+  });
+  document.getElementById("riddleAnswer").addEventListener("keydown", e => {
+    if (e.key === "Enter") checkRiddle();
+  });
+
+  renderCounter();
+  applyPinState();
+
+  // The final riddle is intentionally session-like: refresh starts it over.
+  lsSet(RIDDLE_KEY, "0");
+  applyRiddleState();
+
+  applySecretState();
+
+  /* restore place on refresh */
+  const progress = getProgress();
+  if (progress >= 3) showScreen("success");
+  else if (progress === 2) showScreen("puzzle3");
+  else if (progress === 1) { showScreen("puzzle2"); bootTerminal(); }
+</script>
+</body>
+</html>
